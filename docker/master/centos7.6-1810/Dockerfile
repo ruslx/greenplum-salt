@@ -1,4 +1,4 @@
-FROM centos:7.5.1804
+FROM centos:7.6.1810
 MAINTAINER jerome.petazzoni@docker.com
 
 RUN yum clean all && \

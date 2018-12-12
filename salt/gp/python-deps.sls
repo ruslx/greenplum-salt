@@ -30,8 +30,16 @@ pip-deps:
 #
 # OR
 #
-# yum reinstall python-pip   #  python2-pip      noarch      8.1.2-5.el7
-
+# yum reinstall python-pip
+#      python2-pip      noarch      8.1.2-5.el7
+#
+# Salt Stack configuration management
+# https://wiki.vigor.nz/SaltStack
+# https://github.com/saltstack/salt/issues/49967
+# sudo pip uninstall pip
+# sudo apt install --reinstall python-pip
+# sudo pip install pip==9.0.1
+#
 #pip-upgr:
 #  cmd.run:
 #    - name: pip install --upgrade pip
@@ -56,7 +64,6 @@ python-modules:
 
 conan_repo_added:
   cmd.run:
-    - user: {{ bld_user }} 
+    - user: {{ bld_user }}
     - name: conan remote add GP https://api.bintray.com/conan/greenplum-db/gpdb-oss
     - unless: "conan remote list | grep GP:"
-

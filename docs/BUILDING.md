@@ -17,6 +17,23 @@
 ./tasks dind build
 ```
 
+```
+DEBUG=1 ./tasks cont bld new
+```
+
+```
+./tasks dind run
+./tasks dind exec
+
+```
+./tasks dev gpdb       - for all build
+./tasks dev gpdb stage - partial build
+```
+
+```
+./tasks dind del
+```
+
 License
 ----
 MIT

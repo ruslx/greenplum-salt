@@ -31,6 +31,8 @@
 #Oc=${#Os}
 #echo $Oc
 
+[[ $DEBUG ]] && set -x
+
 function ls_user {
     echo
     echo -n "  Local User: "
@@ -307,7 +309,7 @@ EOF
                 echo
                 docker run --privileged --name mdw -h mdw -d \
                            -v /var/run/docker.sock:/var/run/docker.sock \
-                           -p 2222:22 -p 5432:5432 \
+                           -p 2244:22 -p 5433:5432 \
                            -v `pwd`:/srv \
                            -v $(pwd)/hosts:/etc/hosts \
                            -v $(pwd)/data/mdw:/data \
@@ -434,6 +436,8 @@ EOF
                             echo
                             echo "create bld - build host"
                             echo
+                            [[   -d $(pwd)/hosts ]] && rm -rf $(pwd)/hosts
+                            [[ ! -f $(pwd)/hosts ]] && cp /etc/hosts $(pwd)/hosts
                             docker run --privileged --name bld -h bld -d \
                                        --tmpfs /tmp --tmpfs /run \
                                        -v `pwd`:/srv \
@@ -476,6 +480,10 @@ EOF
                 ;;
             "tty")
                 stty rows 44 columns 168
+                ;;
+            "sysinit")
+                salt 'mdw'  state.apply gp/kernel
+                salt 'sdw*' state.apply gp/kernel
                 ;;
             "sshinit")
                 salt 'mdw' ssh.set_known_host gpadmin hostname="mdw"
@@ -546,7 +554,7 @@ EOF
                 su - gpadmin -c 'source /usr/local/greenplum-db/greenplum_path.sh && MASTER_DATA_DIRECTORY=/data/master/gpseg-1 gpperfmon_install --enable --password gpadmin --port 5432'
                 su - gpadmin -c 'source /usr/local/greenplum-db/greenplum_path.sh && MASTER_DATA_DIRECTORY=/data/master/gpseg-1 gpstop -r'
                 sleep 10s
-                su - gpadmin -c 'ps -ef | grep gpmmon'
+                su - gpadmin -c 'ps -ef | grep -e gpmmon -e gpsmon'
                 sleep 5s
                 su - gpadmin -c "psql gpperfmon -c 'SELECT * FROM system_now;'"
                 ;;

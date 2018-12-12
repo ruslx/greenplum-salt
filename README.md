@@ -34,9 +34,20 @@
 ```
 ##### Initialize GP database
 ```sh
+[mdw] ./tasks cfg sysinit
 [mdw] ./tasks cfg sshinit
 [mdw] ./tasks cfg gpinit
 [mdw] ./tasks cfg gpperfmon
+```
+##### Clean GP
+```
+[mdw] salt 'sdw*' cmd.run 'ps aux | grep postgres'
+[mdw] salt 'sdw*' cmd.run 'killall -9 postgres'
+[mdw] salt 'sdw*' cmd.run 'rm -rf /data/primary/*'
+[mdw] salt 'sdw*' cmd.run 'ls -la /data/primary/'
+[mdw] salt 'sdw*' cmd.run 'rm -rf /data/mirror/*'
+[mdw] salt 'sdw*' cmd.run 'ls -la /data/mirror/'
+[mdw] salt 'sdw*' cmd.run 'ls -la /tmp/'
 ```
 #### Remove test containers (mdw, sdw1, sdw2, sdw3)
 ```sh

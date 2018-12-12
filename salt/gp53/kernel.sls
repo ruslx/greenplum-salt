@@ -18,6 +18,8 @@ kernel.hostname:
     - value: {{ grains['id'] }}
     - config: /etc/sysctl.conf
 
+# kernel.sem = {SEMMSL, SEMMNS, SEMOPM, SEMMNI}
+# kernel.sem = 250 512000 100 2048
 sysctl:
   file.append:
     - name: /etc/sysctl.conf
@@ -25,8 +27,6 @@ sysctl:
       - kernel.shmmax = 500000000
       - kernel.shmmni = 4096
       - kernel.shmall = 4000000000
-      - ## kernel.sem = {SEMMSL, SEMMNS, SEMOPM, SEMMNI}
-      - # kernel.sem = 250 512000 100 2048
       - kernel.sem = 32000 1024000000 500 32000
       - kernel.sysrq = 1
       - kernel.core_uses_pid = 1
@@ -44,6 +44,13 @@ sysctl:
       - net.core.rmem_max = 2097152
       - net.core.wmem_max = 2097152
       - vm.overcommit_memory = 2
+
+upd-sysctl:
+  cmd.run:
+    - runas: root
+    - name: sysctl -p
+    - require:
+      - sysctl
 
 # https://gableroux.com/tips/2016/02/18/keep-saltstack-colored-output/
 # http://grokbase.com/t/gg/salt-users/1495aa0601/set-variable-after-state-is-executed
